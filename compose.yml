@@ -1,0 +1,37 @@
+services:
+  web1:
+    build:
+      context: ./web
+    hostname: web1
+    ports:
+      - "81:5000"
+    volumes:
+      - ./web:/app
+    environment:
+      FLASK_APP: src/app.py
+      FLASK_ENV: development
+
+  web2:
+    build:
+      context: ./web
+    hostname: web2
+    ports:
+      - "82:5000"
+    volumes:
+      - ./web:/app
+    environment:
+      FLASK_APP: src/app.py
+      FLASK_ENV: development
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - web1
+      - web2
